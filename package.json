@@ -1,0 +1,115 @@
+{
+  "name": "@oxog/diffkit",
+  "version": "1.0.0",
+  "description": "Universal diff toolkit with zero dependencies — compare anything, customize everything",
+  "author": "Ersin Koc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ersinkoc/diffkit.git"
+  },
+  "homepage": "https://diffkit.oxog.dev",
+  "keywords": [
+    "diff",
+    "compare",
+    "difference",
+    "text-diff",
+    "code-diff",
+    "html-diff",
+    "unified-diff",
+    "split-diff",
+    "react-diff",
+    "syntax-highlighting",
+    "zero-dependency"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/esm/renderers/react/index.js",
+      "require": "./dist/cjs/renderers/react/index.js",
+      "types": "./dist/types/renderers/react/index.d.ts"
+    },
+    "./plugins/syntax": {
+      "import": "./dist/esm/plugins/syntax/index.js",
+      "require": "./dist/cjs/plugins/syntax/index.js",
+      "types": "./dist/types/plugins/syntax/index.d.ts"
+    },
+    "./plugins/html-dom": {
+      "import": "./dist/esm/plugins/html-dom/index.js",
+      "require": "./dist/cjs/plugins/html-dom/index.js",
+      "types": "./dist/types/plugins/html-dom/index.d.ts"
+    },
+    "./plugins/html-text": {
+      "import": "./dist/esm/plugins/html-text/index.js",
+      "require": "./dist/cjs/plugins/html-text/index.js",
+      "types": "./dist/types/plugins/html-text/index.d.ts"
+    },
+    "./plugins/markdown": {
+      "import": "./dist/esm/plugins/markdown/index.js",
+      "require": "./dist/cjs/plugins/markdown/index.js",
+      "types": "./dist/types/plugins/markdown/index.d.ts"
+    },
+    "./themes": {
+      "import": "./dist/esm/themes/index.js",
+      "require": "./dist/cjs/themes/index.js",
+      "types": "./dist/types/themes/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "dev": "vitest --pool forks",
+    "test": "vitest run --pool forks",
+    "test:coverage": "vitest run --pool forks --coverage",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc -p tsconfig.build.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:types": "tsc -p tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist/types",
+    "lint": "eslint src tests",
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run lint && npm run test:coverage && npm run build",
+    "website:dev": "cd website && npm run dev",
+    "website:build": "cd website && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  }
+}
