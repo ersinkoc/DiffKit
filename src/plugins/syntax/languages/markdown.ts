@@ -58,7 +58,7 @@ const patterns: TokenPattern[] = [
   { type: 'keyword', pattern: /&[a-zA-Z0-9#]+;/ },
 
   // Plain text
-  { type: 'variable', pattern: /[^\n`*_~\[\]()!#>|\-+\d\\]+/ },
+  { type: 'variable', pattern: /[^\n`*_~[\]()!#>|\-+\d\\]+/ },
 ];
 
 const tokenize = createTokenizer(patterns);

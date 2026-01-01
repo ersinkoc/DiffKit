@@ -32,6 +32,15 @@ export default [
         afterAll: 'readonly',
         vi: 'readonly',
         test: 'readonly',
+        // Browser globals for React components
+        window: 'readonly',
+        document: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
       },
     },
     plugins: {

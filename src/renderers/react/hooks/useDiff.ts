@@ -75,7 +75,7 @@ export function useDiffAsync(
 
       try {
         // Use setTimeout to allow UI to update
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => window.setTimeout(resolve, 0));
 
         if (cancelled) return;
 

@@ -57,7 +57,7 @@ export const myersAlgorithm: DiffAlgorithm = {
     const trace: number[][] = [];
 
     // Initialize v with -1 (meaning "not reached")
-    let v = new Array<number>(vSize).fill(-1);
+    const v = new Array<number>(vSize).fill(-1);
     v[vOffset + 1] = 0;
 
     // Main loop: iterate over edit distance d

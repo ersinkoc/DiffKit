@@ -211,7 +211,7 @@ export function nodesEqual(a: DOMNode, b: DOMNode): boolean {
     case 'comment':
       return a.content === b.content;
 
-    case 'element':
+    case 'element': {
       if (a.tagName !== b.tagName) return false;
 
       // Check attributes
@@ -241,6 +241,7 @@ export function nodesEqual(a: DOMNode, b: DOMNode): boolean {
       }
 
       return true;
+    }
   }
 
   return false;

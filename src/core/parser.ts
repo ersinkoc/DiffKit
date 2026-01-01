@@ -59,7 +59,7 @@ export function parse(content: string, options: Partial<ParserOptions> = {}): Pa
         }
         break;
 
-      case 'word':
+      case 'word': {
         const words = tokenizeWords(line);
         for (const word of words) {
           if (opts.ignoreWhitespace && /^\s+$/.test(word.value)) {
@@ -74,6 +74,7 @@ export function parse(content: string, options: Partial<ParserOptions> = {}): Pa
           lineTokens.push(token);
         }
         break;
+      }
 
       case 'line':
       default:

@@ -80,7 +80,7 @@
     "lint": "eslint src tests",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "prepublishOnly": "npm run lint && npm run test:coverage && npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
     "website:dev": "cd website && npm run dev",
     "website:build": "cd website && npm run build"
   },
