@@ -2,7 +2,7 @@
  * Tests for inline HTML renderer
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { renderInline, renderInlineCharDiff } from '../../src/renderers/html/inline.js';
 import type { DiffResult } from '../../src/core/types.js';
 

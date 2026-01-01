@@ -2,7 +2,7 @@
  * Tests for unified HTML renderer
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { renderUnified, renderUnifiedWithSyntax } from '../../src/renderers/html/unified.js';
 import type { DiffResult } from '../../src/core/types.js';
 

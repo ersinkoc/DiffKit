@@ -2,7 +2,7 @@
  * Tests for escape utilities
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   escapeHtml,
   unescapeHtml,

@@ -136,6 +136,11 @@ export interface DiffResult {
 }
 
 /**
+ * Whitespace handling mode
+ */
+export type WhitespaceMode = 'all' | 'leading' | 'trailing' | 'collapse' | 'ignore';
+
+/**
  * Diff engine configuration options
  */
 export interface DiffEngineOptions {
@@ -144,6 +149,10 @@ export interface DiffEngineOptions {
   context?: number;
   theme?: Theme | string;
   plugins?: DiffPlugin[];
+  ignoreWhitespace?: boolean | WhitespaceMode;
+  ignoreCase?: boolean;
+  trimLines?: boolean;
+  ignoreBlankLines?: boolean;
 }
 
 /**

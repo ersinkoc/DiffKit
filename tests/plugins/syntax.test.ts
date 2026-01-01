@@ -2,7 +2,7 @@
  * Syntax plugin tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { syntaxPlugin } from '../../src/plugins/syntax/index.js';
 import {
   getTokenizer,
@@ -80,8 +80,16 @@ describe('isLanguageSupported', () => {
 
   it('should return false for unsupported languages', () => {
     expect(isLanguageSupported('unknownlang')).toBe(false);
-    expect(isLanguageSupported('rust')).toBe(false);
-    expect(isLanguageSupported('go')).toBe(false);
+    expect(isLanguageSupported('brainfuck')).toBe(false);
+    expect(isLanguageSupported('cobol')).toBe(false);
+  });
+
+  it('should support newly added languages', () => {
+    expect(isLanguageSupported('rust')).toBe(true);
+    expect(isLanguageSupported('go')).toBe(true);
+    expect(isLanguageSupported('java')).toBe(true);
+    expect(isLanguageSupported('cpp')).toBe(true);
+    expect(isLanguageSupported('sql')).toBe(true);
   });
 
   it('should be case insensitive', () => {

@@ -10,6 +10,11 @@ import { tokenizeCSS } from './css.js';
 import { tokenizeHTML } from './html.js';
 import { tokenizeJSON } from './json.js';
 import { tokenizeMarkdown } from './markdown.js';
+import { tokenizeGo } from './go.js';
+import { tokenizeRust } from './rust.js';
+import { tokenizeJava } from './java.js';
+import { tokenizeCpp } from './cpp.js';
+import { tokenizeSQL } from './sql.js';
 import { simpleTokenize } from '../tokenizer.js';
 
 export {
@@ -20,6 +25,11 @@ export {
   tokenizeHTML,
   tokenizeJSON,
   tokenizeMarkdown,
+  tokenizeGo,
+  tokenizeRust,
+  tokenizeJava,
+  tokenizeCpp,
+  tokenizeSQL,
 };
 
 /**
@@ -48,6 +58,26 @@ const languageTokenizers: Record<string, Tokenizer> = {
   jsonc: tokenizeJSON,
   markdown: tokenizeMarkdown,
   md: tokenizeMarkdown,
+  go: tokenizeGo,
+  golang: tokenizeGo,
+  rust: tokenizeRust,
+  rs: tokenizeRust,
+  java: tokenizeJava,
+  c: tokenizeCpp,
+  cpp: tokenizeCpp,
+  'c++': tokenizeCpp,
+  cc: tokenizeCpp,
+  cxx: tokenizeCpp,
+  h: tokenizeCpp,
+  hpp: tokenizeCpp,
+  hxx: tokenizeCpp,
+  sql: tokenizeSQL,
+  mysql: tokenizeSQL,
+  postgresql: tokenizeSQL,
+  postgres: tokenizeSQL,
+  sqlite: tokenizeSQL,
+  plsql: tokenizeSQL,
+  tsql: tokenizeSQL,
 };
 
 /**
@@ -103,6 +133,17 @@ export function detectLanguage(filename: string): string | undefined {
     jsonc: 'json',
     md: 'markdown',
     markdown: 'markdown',
+    go: 'go',
+    rs: 'rust',
+    java: 'java',
+    c: 'cpp',
+    cpp: 'cpp',
+    cc: 'cpp',
+    cxx: 'cpp',
+    h: 'cpp',
+    hpp: 'cpp',
+    hxx: 'cpp',
+    sql: 'sql',
   };
 
   return extensionMap[ext];

@@ -2,7 +2,7 @@
  * HTML DOM plugin tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { htmlDomPlugin, parseHTML, serializeHTML, diffDOM } from '../../src/plugins/html-dom/index.js';
 
 describe('htmlDomPlugin', () => {

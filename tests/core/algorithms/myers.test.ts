@@ -2,7 +2,7 @@
  * Myers algorithm tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { myersAlgorithm } from '../../../src/core/algorithms/myers.js';
 
 describe('myersAlgorithm', () => {

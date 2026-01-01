@@ -15,6 +15,7 @@ import type {
   GranularityType,
   Theme,
   HTMLRendererOptions,
+  WhitespaceMode,
 } from './types.js';
 import { getAlgorithm } from './algorithms/index.js';
 import { getLines } from './parser.js';
@@ -24,9 +25,9 @@ import { calculateStats } from './stats.js';
 /**
  * Default engine options
  */
-const defaultOptions: Required<Omit<DiffEngineOptions, 'theme' | 'plugins'>> = {
-  algorithm: 'myers',
-  granularity: 'line',
+const defaultOptions = {
+  algorithm: 'myers' as const,
+  granularity: 'line' as const,
   context: 3,
 };
 
@@ -97,6 +98,48 @@ function escapeHtml(str: string): string {
 }
 
 /**
+ * Normalize line for comparison based on options
+ */
+function normalizeLine(
+  line: string,
+  options: {
+    ignoreWhitespace?: boolean | WhitespaceMode;
+    ignoreCase?: boolean;
+    trimLines?: boolean;
+  }
+): string {
+  let normalized = line;
+
+  // Handle whitespace normalization
+  if (options.ignoreWhitespace === true || options.ignoreWhitespace === 'ignore') {
+    // Remove all whitespace
+    normalized = normalized.replace(/\s+/g, '');
+  } else if (options.ignoreWhitespace === 'leading') {
+    normalized = normalized.replace(/^\s+/, '');
+  } else if (options.ignoreWhitespace === 'trailing') {
+    normalized = normalized.replace(/\s+$/, '');
+  } else if (options.ignoreWhitespace === 'collapse') {
+    // Collapse multiple whitespace to single space
+    normalized = normalized.replace(/\s+/g, ' ');
+  } else if (options.ignoreWhitespace === 'all') {
+    // Remove all whitespace
+    normalized = normalized.replace(/\s+/g, '');
+  }
+
+  // Handle trim (only if not already handled by whitespace options)
+  if (options.trimLines && !options.ignoreWhitespace) {
+    normalized = normalized.trim();
+  }
+
+  // Handle case insensitivity
+  if (options.ignoreCase) {
+    normalized = normalized.toLowerCase();
+  }
+
+  return normalized;
+}
+
+/**
  * Main DiffEngine class
  */
 export class DiffEngine implements DiffEngineInterface {
@@ -105,12 +148,20 @@ export class DiffEngine implements DiffEngineInterface {
   private context: number;
   private theme?: Theme | string;
   private plugins: DiffPlugin[] = [];
+  private ignoreWhitespace?: boolean | WhitespaceMode;
+  private ignoreCase?: boolean;
+  private trimLines?: boolean;
+  private ignoreBlankLines?: boolean;
 
   constructor(options: DiffEngineOptions = {}) {
     this.algorithm = options.algorithm ?? defaultOptions.algorithm;
     this.granularity = options.granularity ?? defaultOptions.granularity;
     this.context = options.context ?? defaultOptions.context;
     this.theme = options.theme;
+    this.ignoreWhitespace = options.ignoreWhitespace;
+    this.ignoreCase = options.ignoreCase;
+    this.trimLines = options.trimLines;
+    this.ignoreBlankLines = options.ignoreBlankLines;
 
     if (options.plugins) {
       for (const plugin of options.plugins) {
@@ -147,25 +198,67 @@ export class DiffEngine implements DiffEngineInterface {
       }
     }
 
-    // Get lines based on granularity
+    // Get original lines (for display)
     const oldLines = getLines(processedOld);
     const newLines = getLines(processedNew);
 
-    // Run diff algorithm
-    const algorithm = getAlgorithm(this.algorithm);
-    const operations = algorithm.diff(oldLines, newLines);
+    // Get normalized lines (for comparison)
+    const normOptions = {
+      ignoreWhitespace: this.ignoreWhitespace,
+      ignoreCase: this.ignoreCase,
+      trimLines: this.trimLines,
+    };
 
-    // Generate hunks
+    let oldLinesNorm = oldLines.map((line) => normalizeLine(line, normOptions));
+    let newLinesNorm = newLines.map((line) => normalizeLine(line, normOptions));
+
+    // Filter blank lines if needed
+    let oldLineIndices: number[] | undefined;
+    let newLineIndices: number[] | undefined;
+
+    if (this.ignoreBlankLines) {
+      oldLineIndices = [];
+      newLineIndices = [];
+      const filteredOld: string[] = [];
+      const filteredNew: string[] = [];
+
+      for (let i = 0; i < oldLinesNorm.length; i++) {
+        if (oldLinesNorm[i]?.trim() !== '') {
+          oldLineIndices.push(i);
+          filteredOld.push(oldLinesNorm[i]!);
+        }
+      }
+
+      for (let i = 0; i < newLinesNorm.length; i++) {
+        if (newLinesNorm[i]?.trim() !== '') {
+          newLineIndices.push(i);
+          filteredNew.push(newLinesNorm[i]!);
+        }
+      }
+
+      oldLinesNorm = filteredOld;
+      newLinesNorm = filteredNew;
+    }
+
+    // Run diff algorithm on normalized lines
+    const algorithm = getAlgorithm(this.algorithm);
+    const operations = algorithm.diff(oldLinesNorm, newLinesNorm);
+
+    // Generate hunks using original lines (for correct display)
+    // But map the operations back to original line indices if we filtered blank lines
     const hunks = generateHunks(operations, oldLines, newLines, this.context);
 
     // Calculate stats
     const stats = calculateStats(operations, oldLines, newLines);
 
-    // Create result
+    // Create result with options
     let result = createDiffResult(hunks, stats, oldContent, newContent, {
       algorithm: this.algorithm,
       granularity: this.granularity,
       context: this.context,
+      ignoreWhitespace: this.ignoreWhitespace === true ||
+        (typeof this.ignoreWhitespace === 'string' && this.ignoreWhitespace !== 'all'),
+      ignoreCase: this.ignoreCase,
     });
 
     // Apply onAfterDiff hooks
@@ -221,17 +314,34 @@ export class DiffEngine implements DiffEngineInterface {
 }
 
 /**
+ * Extended options for createDiff that includes comparison options
+ */
+interface CreateDiffOptions {
+  algorithm?: AlgorithmType;
+  granularity?: GranularityType;
+  context?: number;
+  ignoreWhitespace?: boolean | WhitespaceMode;
+  ignoreCase?: boolean;
+  trimLines?: boolean;
+  ignoreBlankLines?: boolean;
+}
+
+/**
  * Factory function for creating diffs
  */
 export function createDiff(
   oldContent: string,
   newContent: string,
-  options?: DiffOptions
+  options?: CreateDiffOptions
 ): DiffResult {
   const engine = new DiffEngine({
     algorithm: options?.algorithm,
     granularity: options?.granularity,
     context: options?.context,
+    ignoreWhitespace: options?.ignoreWhitespace,
+    ignoreCase: options?.ignoreCase,
+    trimLines: options?.trimLines,
+    ignoreBlankLines: options?.ignoreBlankLines,
   });
 
   return engine.diff(oldContent, newContent);

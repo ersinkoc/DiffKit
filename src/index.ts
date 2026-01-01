@@ -9,6 +9,7 @@ export type {
   GranularityType,
   ChangeType,
   OperationType,
+  WhitespaceMode,
   Token,
   ParsedContent,
   ParserOptions,
@@ -56,6 +57,17 @@ export {
   parseUnifiedDiff,
 } from './core/hunk.js';
 
+// Unified diff/patch parser (full-featured)
+export type { ParsedUnifiedDiff, FileDiff, ParsedPatch } from './core/unified-parser.js';
+export {
+  parseUnifiedDiffFull,
+  parsePatch,
+  isValidUnifiedDiff,
+  extractChanges,
+  reverseDiff,
+  applyDiff,
+} from './core/unified-parser.js';
+
 // Stats
 export {
   calculateStats,
@@ -66,6 +78,20 @@ export {
   formatStats,
   formatDetailedStats,
 } from './core/stats.js';
+
+// Word-level diff
+export {
+  diffWords,
+  diffLinePair,
+  findLinePairs,
+  enhanceChangesWithWordDiff,
+  segmentsToHtml,
+  type DiffSegment,
+  type WordDiffResult,
+  type WordDiffOptions,
+  type LinePair,
+  type EnhancedChange,
+} from './core/word-diff.js';
 
 // Renderers
 export {

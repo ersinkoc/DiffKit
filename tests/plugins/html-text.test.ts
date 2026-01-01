@@ -2,7 +2,7 @@
  * HTML text plugin tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   htmlTextPlugin,
   stripHtmlTags,

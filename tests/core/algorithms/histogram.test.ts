@@ -2,7 +2,7 @@
  * Histogram algorithm tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { histogramAlgorithm } from '../../../src/core/algorithms/histogram.js';
 
 describe('histogramAlgorithm', () => {

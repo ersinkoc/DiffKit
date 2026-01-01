@@ -5,15 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-        execArgv: ['--max-old-space-size=4096'],
-      },
-    },
     testTimeout: 30000,
-    fileParallelism: false,
     include: ['tests/**/*.test.ts'],
     coverage: {
       provider: 'v8',

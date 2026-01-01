@@ -12,6 +12,14 @@ export {
   countOccurrences,
   findLowOccurrenceLines,
 } from './lcs.js';
+export {
+  detectMoves,
+  detectMovesFromContent,
+  annotateMoves,
+  type MoveBlock,
+  type MoveDetectionOptions,
+  type EnhancedDiffOperation,
+} from './move-detection.js';
 
 import { myersAlgorithm } from './myers.js';
 import { patienceAlgorithm } from './patience.js';

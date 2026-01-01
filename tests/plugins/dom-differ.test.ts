@@ -2,7 +2,7 @@
  * Tests for DOM differ
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   diffDOM,
   nodesEqual,

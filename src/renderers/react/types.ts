@@ -155,3 +155,19 @@ export interface UseDiffResult {
  * Theme hook result
  */
 export interface UseThemeResult extends ThemeContextValue {}
+
+/**
+ * Props for virtualized unified view
+ */
+export interface VirtualizedUnifiedViewProps extends UnifiedViewProps {
+  /** Height of the container in pixels */
+  containerHeight?: number;
+  /** Height of each line in pixels */
+  lineHeight?: number;
+  /** Number of lines to render outside visible area */
+  overscan?: number;
+  /** Enable virtual scrolling (default: true for large diffs) */
+  virtualize?: boolean | 'auto';
+  /** Threshold for auto-enabling virtualization (number of lines) */
+  virtualizeThreshold?: number;
+}

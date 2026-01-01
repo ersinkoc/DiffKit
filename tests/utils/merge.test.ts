@@ -2,7 +2,7 @@
  * Tests for merge utilities
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   deepMerge,
   deepMergeAll,

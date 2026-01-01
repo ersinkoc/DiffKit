@@ -2,7 +2,7 @@
  * Edge cases integration tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { createDiff } from '../../src/index.js';
 
 describe('Whitespace handling', () => {

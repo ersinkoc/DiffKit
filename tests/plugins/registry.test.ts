@@ -2,7 +2,6 @@
  * Tests for plugin registry
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
 import {
   pluginRegistry,
   registerPlugin,

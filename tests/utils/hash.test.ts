@@ -2,7 +2,7 @@
  * Tests for hash utilities
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   hash,
   hashToHex,

@@ -2,7 +2,6 @@
  * DiffEngine tests
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
 import { DiffEngine, createDiff } from '../../src/core/diff-engine.js';
 import type { DiffPlugin } from '../../src/core/types.js';
 

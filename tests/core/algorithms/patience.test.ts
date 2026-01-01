@@ -2,7 +2,7 @@
  * Patience algorithm tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import { patienceAlgorithm } from '../../../src/core/algorithms/patience.js';
 
 describe('patienceAlgorithm', () => {

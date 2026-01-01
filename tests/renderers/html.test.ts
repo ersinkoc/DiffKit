@@ -2,7 +2,7 @@
  * HTML renderer tests
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   HTMLRenderer,
   createHTMLRenderer,

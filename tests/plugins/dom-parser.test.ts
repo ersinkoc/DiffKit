@@ -2,7 +2,7 @@
  * Tests for DOM parser
  */
 
-import { describe, it, expect } from 'vitest';
+
 import {
   parseHTML,
   serializeHTML,
