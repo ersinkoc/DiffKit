@@ -3,7 +3,7 @@
  * Implements windowing/virtual scrolling to only render visible items
  */
 
-import {
+import React, {
   useRef,
   useState,
   useCallback,

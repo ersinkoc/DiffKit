@@ -3,14 +3,8 @@
  */
 
 import {
-  useFlattenedDiffLines,
-  useFindLineIndex,
   type VirtualizedDiffLine,
 } from '../../../src/renderers/react/VirtualizedList.js';
-
-// Mock React hooks for testing
-const mockUseMemo = <T>(fn: () => T): T => fn();
-const mockUseCallback = <T extends (...args: unknown[]) => unknown>(fn: T): T => fn;
 
 // Since we can't test React components directly without a DOM,
 // we test the utility functions and hooks logic

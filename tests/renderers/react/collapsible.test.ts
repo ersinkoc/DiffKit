@@ -5,7 +5,7 @@
  * we test the logic and types that the hooks would use.
  */
 
-import type { Hunk, Change } from '../../../src/core/types.js';
+import type { Hunk } from '../../../src/core/types.js';
 
 // Helper to create mock hunks
 function createMockHunk(changeCount: number): Hunk {
@@ -245,14 +245,14 @@ describe('Collapsible hunks logic', () => {
 describe('useHunkCollapse logic', () => {
   it('should start expanded by default', () => {
     const initialCollapsed = false;
-    let isCollapsed = initialCollapsed;
+    const isCollapsed = initialCollapsed;
 
     expect(isCollapsed).toBe(false);
   });
 
   it('should start collapsed when initialCollapsed is true', () => {
     const initialCollapsed = true;
-    let isCollapsed = initialCollapsed;
+    const isCollapsed = initialCollapsed;
 
     expect(isCollapsed).toBe(true);
   });

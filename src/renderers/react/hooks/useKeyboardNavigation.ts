@@ -3,7 +3,7 @@
  * Provides accessible keyboard interactions for navigating diffs
  */
 
-import { useCallback, useRef, useState, type RefObject } from 'react';
+import React, { useCallback, useRef, useState, type RefObject } from 'react';
 import type { Hunk, Change } from '../../../core/types.js';
 
 /**

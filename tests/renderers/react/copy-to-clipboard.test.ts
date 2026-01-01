@@ -24,13 +24,9 @@ function createMockHunk(
       const change: Change = {
         type: c.type,
         content: c.content,
-      } as Change;
-      if (c.type !== 'add') {
-        (change as any).oldLineNumber = oldLine++;
-      }
-      if (c.type !== 'delete') {
-        (change as any).newLineNumber = newLine++;
-      }
+        oldLineNumber: c.type !== 'add' ? oldLine++ : undefined,
+        newLineNumber: c.type !== 'delete' ? newLine++ : undefined,
+      };
       return change;
     }),
   };
@@ -57,8 +53,8 @@ function formatChange(change: Change, options: Required<CopyHunkOptions>): strin
   if (options.includeLineNumbers) {
     const lineNum =
       change.type === 'delete'
-        ? (change as any).oldLineNumber
-        : (change as any).newLineNumber;
+        ? change.oldLineNumber
+        : change.newLineNumber;
     line += `${lineNum ?? ''}\t`;
   }
 

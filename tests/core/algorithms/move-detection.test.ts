@@ -6,7 +6,6 @@ import {
   detectMoves,
   detectMovesFromContent,
   annotateMoves,
-  type MoveBlock,
 } from '../../../src/core/algorithms/move-detection.js';
 import type { DiffOperation } from '../../../src/core/types.js';
 

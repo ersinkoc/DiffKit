@@ -138,10 +138,9 @@ describe('findLinePairs', () => {
     const deletedLines = ['hello world'];
     const addedLines = ['completely different text'];
 
-    const pairsLow = findLinePairs(deletedLines, addedLines, 0.1);
     const pairsHigh = findLinePairs(deletedLines, addedLines, 0.9);
 
-    // Low threshold might find a match, high threshold shouldn't
+    // High threshold shouldn't find a match for dissimilar text
     expect(pairsHigh.length).toBe(0);
   });
 

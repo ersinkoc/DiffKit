@@ -35,6 +35,7 @@ export default [
         // Browser globals for React components
         window: 'readonly',
         document: 'readonly',
+        navigator: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
         setInterval: 'readonly',
