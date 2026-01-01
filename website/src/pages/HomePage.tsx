@@ -51,6 +51,26 @@ const icons = {
   ),
 };
 
+// Additional feature icons
+const moreIcons = {
+  word: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  ),
+  semantic: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 8h8M8 12h8M8 16h4" />
+    </svg>
+  ),
+  move: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+  ),
+};
+
 const features = [
   {
     icon: icons.zero,
@@ -67,13 +87,13 @@ const features = [
   {
     icon: icons.view,
     title: 'Flexible Views',
-    description: 'Unified, Split, and Inline views with customizable rendering options.',
+    description: 'Unified, Split, and Inline views with virtual scrolling for large diffs.',
     color: 'from-orange-500 to-red-500',
   },
   {
     icon: icons.syntax,
     title: 'Syntax Highlighting',
-    description: 'Built-in support for JavaScript, TypeScript, Python, CSS, HTML, and more.',
+    description: 'Built-in support for JavaScript, TypeScript, Python, Go, Rust, Java, C++, SQL, and more.',
     color: 'from-green-500 to-emerald-500',
   },
   {
@@ -85,8 +105,26 @@ const features = [
   {
     icon: icons.react,
     title: 'React Components',
-    description: 'Ready-to-use React components with hooks for seamless integration.',
+    description: 'Ready-to-use React components with hooks, keyboard navigation, and accessibility.',
     color: 'from-cyan-500 to-blue-500',
+  },
+  {
+    icon: moreIcons.word,
+    title: 'Word-Level Diffs',
+    description: 'Character and word-level highlighting to show exactly what changed within lines.',
+    color: 'from-yellow-500 to-orange-500',
+  },
+  {
+    icon: moreIcons.semantic,
+    title: 'Semantic Diff',
+    description: 'Structure-aware diffing for JSON and YAML with path-based change reporting.',
+    color: 'from-indigo-500 to-purple-500',
+  },
+  {
+    icon: moreIcons.move,
+    title: 'Move Detection',
+    description: 'Detect moved and copied blocks of code with exact and fuzzy matching.',
+    color: 'from-teal-500 to-green-500',
   },
 ];
 
@@ -273,7 +311,7 @@ function Stats() {
   const stats = [
     { value: '0', label: 'Dependencies', suffix: '' },
     { value: '3', label: 'Algorithms', suffix: '' },
-    { value: '5', label: 'Themes', suffix: '' },
+    { value: '920', label: 'Tests', suffix: '+' },
     { value: '100', label: 'TypeScript', suffix: '%' },
   ];
 

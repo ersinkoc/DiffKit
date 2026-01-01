@@ -4,6 +4,8 @@ const sections = [
   { path: '', title: 'Getting Started' },
   { path: 'algorithms', title: 'Algorithms' },
   { path: 'view-modes', title: 'View Modes' },
+  { path: 'word-diff', title: 'Word-Level Diff' },
+  { path: 'semantic', title: 'Semantic Diff' },
   { path: 'plugins', title: 'Plugins' },
   { path: 'themes', title: 'Themes' },
   { path: 'react', title: 'React Components' },
@@ -48,6 +50,8 @@ function DocsPage() {
             <Route index element={<GettingStarted />} />
             <Route path="algorithms" element={<Algorithms />} />
             <Route path="view-modes" element={<ViewModes />} />
+            <Route path="word-diff" element={<WordDiff />} />
+            <Route path="semantic" element={<SemanticDiff />} />
             <Route path="plugins" element={<Plugins />} />
             <Route path="themes" element={<Themes />} />
             <Route path="react" element={<ReactDocs />} />
@@ -191,7 +195,7 @@ function ViewModes() {
   return (
     <DocSection title="View Modes">
       <p className="text-gray-600 mb-8">
-        DiffKit supports three view modes for displaying diffs.
+        DiffKit supports three view modes for displaying diffs, plus virtual scrolling for large files.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">Unified View</h2>
@@ -218,6 +222,21 @@ const html = renderer.render(diff);`} />
       <CodeBlock code={`const renderer = new HTMLRenderer({ mode: 'inline' });
 const html = renderer.render(diff);`} />
 
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Virtual Scrolling (React)</h2>
+      <p className="text-gray-600 mb-4">
+        For large diffs, use virtualized components that only render visible lines for better performance.
+      </p>
+      <CodeBlock code={`import { VirtualizedUnifiedView } from '@oxog/diffkit/react';
+
+<VirtualizedUnifiedView
+  old={oldContent}
+  new={newContent}
+  containerHeight={600}
+  lineHeight={22}
+  virtualize="auto"  // 'auto' | 'always' | 'never'
+  virtualizeThreshold={500}
+/>`} />
+
       <h2 className="text-2xl font-semibold mt-8 mb-4">Renderer Options</h2>
       <CodeBlock code={`const renderer = new HTMLRenderer({
   mode: 'unified',
@@ -225,6 +244,165 @@ const html = renderer.render(diff);`} />
   lineNumbers: true,
   wrapLines: false,
 });`} />
+    </DocSection>
+  );
+}
+
+function WordDiff() {
+  return (
+    <DocSection title="Word-Level Diff">
+      <p className="text-gray-600 mb-8">
+        DiffKit provides word and character-level diffing to highlight exactly what changed within modified lines.
+      </p>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Basic Usage</h2>
+      <CodeBlock code={`import { diffWords } from '@oxog/diffkit';
+
+const result = diffWords(
+  'Hello world',
+  'Hello there'
+);
+
+// result.oldSegments: [{ text: 'Hello ', type: 'equal' }, { text: 'world', type: 'delete' }]
+// result.newSegments: [{ text: 'Hello ', type: 'equal' }, { text: 'there', type: 'insert' }]
+// result.hasDifferences: true`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Character-Level Diff</h2>
+      <p className="text-gray-600 mb-4">
+        For finer granularity, use character-level diffing:
+      </p>
+      <CodeBlock code={`const result = diffWords('cat', 'bat', {
+  granularity: 'char'
+});
+
+// Detects: 'c' -> 'b' change`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Enhance Line Diffs</h2>
+      <p className="text-gray-600 mb-4">
+        Automatically pair and enhance delete/add line pairs with word-level segments:
+      </p>
+      <CodeBlock code={`import { enhanceChangesWithWordDiff } from '@oxog/diffkit';
+
+const changes = [
+  { type: 'delete', content: 'const x = 1;', oldLineNumber: 1 },
+  { type: 'add', content: 'const x = 2;', newLineNumber: 1 },
+];
+
+const enhanced = enhanceChangesWithWordDiff(changes);
+// enhanced[0].segments shows word-level diff for delete line
+// enhanced[1].segments shows word-level diff for add line
+// enhanced[0].hasPairedChange = true`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Render to HTML</h2>
+      <CodeBlock code={`import { segmentsToHtml } from '@oxog/diffkit';
+
+const html = segmentsToHtml(result.newSegments, {
+  deleteClass: 'my-delete-class',
+  insertClass: 'my-insert-class',
+  equalClass: 'my-equal-class',
+});`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Options</h2>
+      <ul className="list-disc pl-6 text-gray-600 space-y-2">
+        <li><code>granularity</code>: <code>'word'</code> | <code>'char'</code> (default: <code>'word'</code>)</li>
+        <li><code>ignoreWhitespace</code>: Ignore whitespace differences</li>
+        <li><code>ignoreCase</code>: Case-insensitive comparison</li>
+      </ul>
+    </DocSection>
+  );
+}
+
+function SemanticDiff() {
+  return (
+    <DocSection title="Semantic Diff">
+      <p className="text-gray-600 mb-8">
+        DiffKit provides structure-aware diffing for JSON and YAML, reporting changes by path.
+      </p>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">JSON Diff</h2>
+      <CodeBlock code={`import { diffJson } from '@oxog/diffkit';
+
+const result = diffJson(
+  { name: 'Alice', age: 30 },
+  { name: 'Bob', age: 30, city: 'NYC' }
+);
+
+// result.isEqual: false
+// result.changes: [
+//   { type: 'modify', path: 'name', oldValue: 'Alice', newValue: 'Bob' },
+//   { type: 'add', path: 'city', newValue: 'NYC' }
+// ]
+// result.stats: { additions: 1, deletions: 0, modifications: 1 }`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">JSON String Diff</h2>
+      <CodeBlock code={`import { diffJsonStrings } from '@oxog/diffkit';
+
+const result = diffJsonStrings(
+  '{"name": "test"}',
+  '{"name": "updated"}'
+);`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">YAML Diff</h2>
+      <CodeBlock code={`import { diffYaml } from '@oxog/diffkit';
+
+const result = diffYaml(\`
+name: test
+version: 1.0.0
+\`, \`
+name: test
+version: 2.0.0
+\`);
+
+// result.changes[0].path: 'version'`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Options</h2>
+      <ul className="list-disc pl-6 text-gray-600 space-y-2">
+        <li><code>maxDepth</code>: Maximum depth to traverse (default: unlimited)</li>
+        <li><code>ignorePaths</code>: Array of paths to ignore (e.g., <code>['timestamp', 'id']</code>)</li>
+        <li><code>ignoreArrayOrder</code>: Treat arrays as sets</li>
+        <li><code>detectMoves</code>: Detect moved items in arrays</li>
+        <li><code>nullEqualsUndefined</code>: Treat null and undefined as equal</li>
+      </ul>
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Format Changes</h2>
+      <CodeBlock code={`import { formatJsonChanges, formatYamlChanges } from '@oxog/diffkit';
+
+const readable = formatJsonChanges(result);
+// Output:
+// ~ name: Alice → Bob
+// + city: NYC`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Change Types</h2>
+      <table className="w-full border-collapse mt-4">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-200 px-4 py-2 text-left">Type</th>
+            <th className="border border-gray-200 px-4 py-2 text-left">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border border-gray-200 px-4 py-2"><code>add</code></td>
+            <td className="border border-gray-200 px-4 py-2">New property added</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-200 px-4 py-2"><code>delete</code></td>
+            <td className="border border-gray-200 px-4 py-2">Property removed</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-200 px-4 py-2"><code>modify</code></td>
+            <td className="border border-gray-200 px-4 py-2">Value changed</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-200 px-4 py-2"><code>type-change</code></td>
+            <td className="border border-gray-200 px-4 py-2">Type changed (e.g., number to string)</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-200 px-4 py-2"><code>move</code></td>
+            <td className="border border-gray-200 px-4 py-2">Item moved in array (when detectMoves enabled)</td>
+          </tr>
+        </tbody>
+      </table>
     </DocSection>
   );
 }
@@ -247,7 +425,7 @@ engine.use(syntaxPlugin({
   highlightChanges: true,
 }));`} />
       <p className="text-gray-600 mb-4">
-        <strong>Supported languages:</strong> javascript, typescript, python, css, html, json, markdown
+        <strong>Supported languages:</strong> javascript, typescript, python, go, rust, java, cpp, css, html, json, markdown, sql
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">HTML DOM Plugin</h2>
@@ -356,7 +534,7 @@ function ReactDocs() {
   return (
     <DocSection title="React Components">
       <p className="text-gray-600 mb-8">
-        DiffKit provides ready-to-use React components for easy integration.
+        DiffKit provides ready-to-use React components with hooks, keyboard navigation, and accessibility support.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">DiffView Component</h2>
@@ -375,6 +553,20 @@ function App() {
   );
 }`} />
 
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Virtualized View</h2>
+      <p className="text-gray-600 mb-4">
+        For large diffs with thousands of lines, use virtualized components for smooth scrolling:
+      </p>
+      <CodeBlock code={`import { VirtualizedUnifiedView } from '@oxog/diffkit/react';
+
+<VirtualizedUnifiedView
+  old={oldContent}
+  new={newContent}
+  containerHeight={600}
+  lineHeight={22}
+  virtualize="auto"
+/>`} />
+
       <h2 className="text-2xl font-semibold mt-8 mb-4">ThemeProvider</h2>
       <CodeBlock code={`import { ThemeProvider, DiffView } from '@oxog/diffkit/react';
 
@@ -387,6 +579,7 @@ function App() {
 }`} />
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">Hooks</h2>
+
       <h3 className="text-xl font-semibold mt-6 mb-3">useDiff</h3>
       <CodeBlock code={`import { useDiff } from '@oxog/diffkit/react';
 
@@ -399,6 +592,101 @@ function MyComponent({ old, new: newContent }) {
   if (error) return <div>Error: {error.message}</div>;
 
   return <pre>{JSON.stringify(result.stats, null, 2)}</pre>;
+}`} />
+
+      <h3 className="text-xl font-semibold mt-6 mb-3">useKeyboardNavigation</h3>
+      <p className="text-gray-600 mb-4">
+        Add keyboard navigation with vim-style keys (j/k, n/p) and arrow keys:
+      </p>
+      <CodeBlock code={`import { useKeyboardNavigation } from '@oxog/diffkit/react';
+
+function DiffWithKeyboard({ lines }) {
+  const { currentIndex, handlers, getItemProps } = useKeyboardNavigation(
+    lines.length,
+    {
+      wrap: true,
+      onSelect: (index) => console.log('Selected line:', index),
+    }
+  );
+
+  return (
+    <div {...handlers}>
+      {lines.map((line, i) => (
+        <div
+          key={i}
+          {...getItemProps(i)}
+          className={i === currentIndex ? 'selected' : ''}
+        >
+          {line}
+        </div>
+      ))}
+    </div>
+  );
+}`} />
+
+      <h3 className="text-xl font-semibold mt-6 mb-3">useCollapsible</h3>
+      <p className="text-gray-600 mb-4">
+        Manage collapsible hunks with auto-collapse for large sections:
+      </p>
+      <CodeBlock code={`import { useCollapsible } from '@oxog/diffkit/react';
+
+function CollapsibleDiff({ hunks }) {
+  const {
+    isCollapsed,
+    toggle,
+    expandAll,
+    collapseAll,
+    collapsedCount,
+  } = useCollapsible(hunks, {
+    defaultState: 'auto',
+    autoCollapseThreshold: 50,
+  });
+
+  return (
+    <div>
+      <button onClick={expandAll}>Expand All</button>
+      <button onClick={collapseAll}>Collapse All</button>
+      {hunks.map((hunk, i) => (
+        <div key={i}>
+          <button onClick={() => toggle(i)}>
+            {isCollapsed(i) ? 'Expand' : 'Collapse'}
+          </button>
+          {!isCollapsed(i) && <HunkContent hunk={hunk} />}
+        </div>
+      ))}
+    </div>
+  );
+}`} />
+
+      <h3 className="text-xl font-semibold mt-6 mb-3">useCopyToClipboard</h3>
+      <p className="text-gray-600 mb-4">
+        Copy diff content with various formatting options:
+      </p>
+      <CodeBlock code={`import { useCopyToClipboard } from '@oxog/diffkit/react';
+
+function CopyableDiff({ hunks }) {
+  const {
+    status,
+    copyHunk,
+    copyAllHunks,
+    copyAdditions,
+    copyDeletions,
+    copyAsUnifiedDiff,
+  } = useCopyToClipboard();
+
+  return (
+    <div>
+      <button onClick={() => copyAllHunks(hunks)}>
+        {status === 'success' ? 'Copied!' : 'Copy All'}
+      </button>
+      <button onClick={() => copyAdditions(hunks)}>
+        Copy Additions Only
+      </button>
+      <button onClick={() => copyAsUnifiedDiff(hunks)}>
+        Copy as Unified Diff
+      </button>
+    </div>
+  );
 }`} />
 
       <h3 className="text-xl font-semibold mt-6 mb-3">useTheme</h3>
@@ -416,6 +704,17 @@ function ThemedComponent() {
     </div>
   );
 }`} />
+
+      <h2 className="text-2xl font-semibold mt-8 mb-4">Accessibility</h2>
+      <p className="text-gray-600 mb-4">
+        All components include ARIA attributes for screen reader support:
+      </p>
+      <ul className="list-disc pl-6 text-gray-600 space-y-2">
+        <li>Keyboard navigation with focus management</li>
+        <li>ARIA labels for interactive elements</li>
+        <li>Proper heading hierarchy</li>
+        <li>Screen reader announcements for state changes</li>
+      </ul>
     </DocSection>
   );
 }
