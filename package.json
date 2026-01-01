@@ -70,9 +70,9 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "dev": "vitest --pool forks",
-    "test": "vitest run --pool forks",
-    "test:coverage": "vitest run --pool forks --coverage",
+    "dev": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs",
+    "test": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs run",
+    "test:coverage": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs run --coverage",
     "build": "npm run build:esm && npm run build:cjs && npm run build:types",
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
@@ -80,7 +80,7 @@
     "lint": "eslint src tests",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "prepublishOnly": "npm run lint && npm run build",
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
     "website:dev": "cd website && npm run dev",
     "website:build": "cd website && npm run build"
   },

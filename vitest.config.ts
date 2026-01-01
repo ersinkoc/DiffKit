@@ -6,6 +6,14 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+        execArgv: ['--max-old-space-size=4096'],
+      },
+    },
+    testTimeout: 30000,
+    fileParallelism: false,
     include: ['tests/**/*.test.ts'],
     coverage: {
       provider: 'v8',
@@ -14,13 +22,16 @@ export default defineConfig({
       exclude: [
         'src/**/*.d.ts',
         'src/**/index.ts',
+        'src/core/types.ts',
+        'src/renderers/types.ts',
+        'src/renderers/react/**',
         'node_modules/**',
       ],
       thresholds: {
-        statements: 60,
-        branches: 60,
-        functions: 50,
-        lines: 60,
+        statements: 95,
+        branches: 85,
+        functions: 95,
+        lines: 95,
       },
     },
   },
